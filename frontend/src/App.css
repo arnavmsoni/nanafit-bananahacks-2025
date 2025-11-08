@@ -1,0 +1,102 @@
+body {
+    margin: 0;
+    background: #fffbea;
+    font-family: 'Baloo 2', cursive;
+    overflow: hidden;
+  }
+  
+  .app-title {
+    font-size: 3rem;
+    color: #f5b301;
+    text-shadow: 2px 2px #ffd966;
+    text-align: center;
+  }
+  
+  .tagline {
+    text-align: center;
+    color: #5a4b00;
+    font-size: 1.2rem;
+  }
+  
+  .video-grid {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+  
+  .trainer-screen, .user-camera {
+    background: #fff4b0;
+    border-radius: 1.5rem;
+    box-shadow: 0 4px 20px rgba(245, 179, 1, 0.3);
+    width: 45%;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .banana-trainer {
+    width: 200px;
+    height: auto;
+    border-radius: 1rem;
+  }
+  
+  .control-panel {
+    text-align: center;
+    padding: 1.5rem;
+    background: #fff6cc;
+    border-top: 3px solid #ffd54f;
+    border-radius: 2rem 2rem 0 0;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .exercise-btn {
+    background: #fff0a5;
+    border: none;
+    padding: 10px 20px;
+    margin: 0.3rem;
+    border-radius: 1rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .exercise-btn.selected {
+    background: #ffeb3b;
+    transform: scale(1.1);
+  }
+  
+  .start-btn, .stop-btn, .refresh-btn {
+    background: #f5b301;
+    border: none;
+    color: white;
+    border-radius: 1rem;
+    padding: 12px 25px;
+    margin: 0.5rem;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .stop-btn {
+    background: #f44336;
+  }
+  
+  .feedback-msg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    margin-top: 1rem;
+  }
+  
+  .floating-banana {
+    position: absolute;
+    left: calc(10% + 80% * var(--x));
+    font-size: 1.5rem;
+    opacity: 0.7;
+  }
+  
