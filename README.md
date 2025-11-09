@@ -1,7 +1,7 @@
 # 🍌 NanaFit
 **Go Bananas with Perfect Form!**
 
-NanaFit is a fitness-tech web app built for the 2025 BananaHacks hackathon.  
+NanaFit is a fitness-tech web app built for the 2025 CornHacks hackathon.  
 It uses AI-powered pose detection to guide your workouts, track reps, and analyze form in real-time — all wrapped in a fun, banana-themed interface. 🍌
 
 ---
@@ -27,3 +27,4 @@ It uses AI-powered pose detection to guide your workouts, track reps, and analyz
 | **AI/ML** | Mediapipe Pose Estimation |
 
 ---
+
