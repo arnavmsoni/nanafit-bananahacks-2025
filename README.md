@@ -6,14 +6,13 @@ It uses AI-powered pose detection to guide your workouts, track reps, and analyz
 
 ---
 
-## 🚀 Features
-- 🎥 **Real-time Pose Detection** – Uses Mediapipe & OpenCV to track form and reps.
-- 💪 **Live Camera Stream** – Backend video feed streams directly into the frontend.
-- 🍌 **Banana AI Trainer** – Animated banana mascot to keep your energy up.
-- 📊 **Rep Counter & Feedback** – See your live rep count, stage, and form corrections.
-- 🏆 **Gamified UI** – Earn "bananas" as rewards for proper form.
-- 🧠 **Smart Feedback** – Alerts you when posture needs adjustment.
-- 🌈 **Animated Interface** – Built with React + Framer Motion for smooth visuals.
+## Features
+- **Real-time Pose Detection** – Uses Mediapipe & OpenCV to track form and reps.
+- **Live Camera Stream** – Backend video feed streams directly into the frontend.
+- **Banana AI Trainer** – Animated banana mascot to keep your energy up.
+- **Rep Counter & Feedback** – See your live rep count, stage, and form corrections.
+- **Smart Feedback** – Alerts you when posture needs adjustment.
+- **Animated Interface** – Built with React + Framer Motion for smooth visuals.
 
 ---
 
@@ -27,4 +26,5 @@ It uses AI-powered pose detection to guide your workouts, track reps, and analyz
 | **AI/ML** | Mediapipe Pose Estimation |
 
 ---
+
 
