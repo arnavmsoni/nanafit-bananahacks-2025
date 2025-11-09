@@ -631,7 +631,7 @@ function App() {
             <div className="split-screen-container">
               {/* Left Side - Banana Bot */}
               <div className="banana-bot-side">
-                <div className="side-header">
+                <div className="side-header"> 
                   <div className="side-label">
                     <span className="label-icon">🍌</span>
                     <span className="label-text">Banana Bot</span>
