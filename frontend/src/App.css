@@ -1367,3 +1367,298 @@ body {
     font-size: 1rem;
   }
 }
+
+/* ADD THESE STYLES TO YOUR EXISTING App.css */
+
+/* Banana Rep Counter Overlay */
+.banana-rep-counter {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border: 4px solid #fff;
+  border-radius: 1.5rem;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  animation: banana-bounce 0.5s ease;
+}
+
+@keyframes banana-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.rep-counter-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.banana-emoji {
+  font-size: 2rem;
+  animation: banana-wiggle 2s ease-in-out infinite;
+}
+
+@keyframes banana-wiggle {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+.rep-counter-label {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #78350f;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.rep-counter-value {
+  font-size: 4rem;
+  font-weight: 900;
+  color: #fff;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+  font-family: 'Baloo 2', cursive;
+}
+
+.rep-counter-sublabel {
+  font-size: 0.75rem;
+  color: #78350f;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Form Feedback Overlay */
+.form-feedback-overlay {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  border: 3px solid;
+  border-radius: 1rem;
+  padding: 1rem 2rem;
+  min-width: 300px;
+  text-align: center;
+  z-index: 10;
+  animation: feedback-slide-up 0.3s ease;
+}
+
+@keyframes feedback-slide-up {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.form-feedback-overlay.good {
+  border-color: #10b981;
+}
+
+.form-feedback-overlay.warning {
+  border-color: #f59e0b;
+}
+
+.form-feedback-overlay.error {
+  border-color: #ef4444;
+}
+
+.form-feedback-overlay.setup {
+  border-color: #f97316;
+}
+
+.feedback-icon-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.feedback-emoji {
+  font-size: 2rem;
+}
+
+.feedback-message {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+  letter-spacing: 0.05em;
+}
+
+.feedback-submessage {
+  font-size: 0.875rem;
+  color: #d1d5db;
+  margin: 0.5rem 0 0 0;
+}
+
+/* Position Status Badge */
+.position-status-badge {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  border: 3px solid;
+  border-radius: 1rem;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  z-index: 10;
+  animation: pulse-badge 2s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.position-status-badge.ready {
+  border-color: #10b981;
+}
+
+.position-status-badge.setup {
+  border-color: #f97316;
+}
+
+.status-dot-large {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 50%;
+  animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.position-status-badge.ready .status-dot-large {
+  background: #10b981;
+}
+
+.position-status-badge.setup .status-dot-large {
+  background: #f97316;
+}
+
+.status-text {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Stage Indicator */
+.stage-indicator {
+  position: absolute;
+  top: 7rem;
+  left: 2rem;
+  background: rgba(0, 0, 0, 0.75);
+  border: 2px solid #fbbf24;
+  border-radius: 0.75rem;
+  padding: 0.5rem 1rem;
+  z-index: 10;
+}
+
+.stage-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #fbbf24;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* Banana celebration animation when rep is counted */
+@keyframes banana-celebration {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.2) rotate(-10deg);
+  }
+  50% {
+    transform: scale(1.3) rotate(10deg);
+  }
+  75% {
+    transform: scale(1.2) rotate(-5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.rep-counted {
+  animation: banana-celebration 0.5s ease;
+}
+
+/* Instructions overlay for setup */
+.setup-instructions {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.9);
+  border: 4px solid #f97316;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  max-width: 400px;
+  text-align: center;
+  z-index: 15;
+}
+
+.setup-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 1rem 0;
+}
+
+.setup-emoji {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.setup-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.setup-steps li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 0.5rem;
+  color: #fff;
+  font-size: 0.875rem;
+  text-align: left;
+}
+
+.setup-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #f97316;
+  color: #fff;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Trophy, TrendingUp, CheckCircle, AlertCircle, Play, Square, RefreshCw, ArrowLeft, Dumbbell } from 'lucide-react';
 import './App.css';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = 'http://localhost:5001';
 
 function App() {
   const [currentView, setCurrentView] = useState('home'); // 'home', 'exercises', or 'workout'
@@ -17,6 +17,7 @@ function App() {
   const [streak, setStreak] = useState(0);
   const [cameraError, setCameraError] = useState('');
   const [connectionStatus, setConnectionStatus] = useState('disconnected');
+  const [backendFeedError, setBackendFeedError] = useState(false);
   
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -31,7 +32,7 @@ function App() {
       name: 'Legs',
       icon: '🦵',
       color: '#22c55e',
-      image: 'https://i.imgur.com/placeholder-legs.png', // Image 1 - Legs highlighted
+      image: 'https://i.imgur.com/placeholder-legs.png',
       exercises: [
         { 
           id: 'squat', 
@@ -74,6 +75,7 @@ function App() {
           id: 'pushup', 
           name: 'Push-ups', 
           tips: 'Straight back, elbows at 45°',
+          videoUrl: '/videos/pushup.mp4',
           instructions: [
             'Start in high plank position, hands shoulder-width',
             'Keep body in straight line from head to heels',
@@ -89,6 +91,7 @@ function App() {
           id: 'chest-press', 
           name: 'Chest Press', 
           tips: 'Push weights up, squeeze at top',
+          videoUrl: '/videos/chest-press.mp4',
           instructions: [
             'Lie on bench with feet flat on floor',
             'Hold dumbbells at chest level, elbows bent',
@@ -104,6 +107,7 @@ function App() {
           id: 'chest-dip', 
           name: 'Chest Dips', 
           tips: 'Lean forward, lower until shoulders at elbow level',
+          videoUrl: '/videos/chest-dip.mp4',
           instructions: [
             'Grip parallel bars and lift yourself up',
             'Start with arms fully extended, body upright',
@@ -397,6 +401,7 @@ function App() {
     console.log('Video URL:', exercise.videoUrl);
     setSelectedExercise(exercise);
     setCurrentView('workout');
+    setBackendFeedError(false);
   };
 
   const handleBackToHome = () => {
@@ -450,6 +455,9 @@ function App() {
       console.error('Failed to end session:', error);
     }
   };
+
+  // Check if current exercise is push-up
+  const isPushupExercise = selectedExercise?.id === 'pushup';
 
   return (
     <div className="app-container">
@@ -515,7 +523,6 @@ function App() {
                       alt={`${group.name} Banana Character`}
                       className="banana-muscle-img"
                       onError={(e) => {
-                        // Fallback to emoji if image doesn't load
                         e.target.style.display = 'none';
                         e.target.nextSibling.style.display = 'flex';
                       }}
@@ -640,52 +647,30 @@ function App() {
                 </div>
                 <div className="bot-video-wrapper">
                   {selectedExercise?.videoUrl ? (
-                    <>
-                      <video
-                        key={selectedExercise.id}
-                        className="banana-bot-video"
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        controls
-                        preload="auto"
-                        onLoadStart={() => {
-                          console.log('🎬 Video loading:', selectedExercise.videoUrl);
-                        }}
-                        onCanPlay={() => {
-                          console.log('✅ Video ready to play');
-                        }}
-                        onLoadedData={() => {
-                          console.log('✅ Video loaded successfully!');
-                        }}
-                        onError={(e) => {
-                          console.error('❌ Video failed to load:', selectedExercise.videoUrl);
-                          console.error('Error code:', e.target.error?.code);
-                          console.error('Error message:', e.target.error?.message);
-                          e.target.style.display = 'none';
-                          e.target.nextElementSibling.style.display = 'flex';
-                        }}
-                      >
-                        <source src={selectedExercise.videoUrl} type="video/mp4" />
-                        Your browser does not support the video tag.
-                      </video>
-                      <div className="video-fallback" style={{ display: 'none' }}>
-                        <div className="fallback-content">
-                          <div className="big-banana">🍌</div>
-                          <p className="fallback-text">Video Not Found</p>
-                          <p className="fallback-subtext">{selectedExercise?.name}</p>
-                          <p className="fallback-subtext" style={{ fontSize: '0.75rem', marginTop: '1rem', color: '#ef4444' }}>
-                            Path: {selectedExercise?.videoUrl}
-                          </p>
-                        </div>
-                      </div>
-                    </>
+                    <video
+                      key={selectedExercise.id}
+                      className="banana-bot-video"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      preload="auto"
+                      style={{ pointerEvents: 'none' }}
+                      onError={(e) => {
+                        console.error('❌ Video failed to load:', selectedExercise.videoUrl);
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
+                    >
+                      <source src={selectedExercise.videoUrl} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
                   ) : (
                     <div className="video-fallback" style={{ display: 'flex' }}>
                       <div className="fallback-content">
                         <div className="big-banana">🍌</div>
-                        <p className="fallback-text">No Video URL</p>
+                        <p className="fallback-text">No Video Available</p>
+                        <p className="fallback-subtext">{selectedExercise?.name}</p>
                       </div>
                     </div>
                   )}
@@ -696,76 +681,49 @@ function App() {
               {/* Right Side - User Camera */}
               <div className="user-camera-side">
                 <div className="user-video-wrapper">
-                  {!isStarted ? (
-                    <div className="camera-placeholder">
-                      <div className="placeholder-content">
-                        <div className="big-banana">🍌</div>
-                        <p className="placeholder-title">Ready to train?</p>
-                        <p className="placeholder-subtitle">Click Start below</p>
-                        <button
-                          onClick={handleStart}
-                          className="control-btn start-btn-large"
-                          disabled={connectionStatus !== 'connected'}
-                        >
-                          <Play className="btn-icon" />
-                          Start Workout
-                        </button>
-                      </div>
-                    </div>
-                  ) : (
+                  {isPushupExercise ? (
                     <>
-                      <video
-                        ref={videoRef}
-                        autoPlay
-                        playsInline
-                        muted
-                        className="user-video-feed"
+                      <img
+                        src={`${API_BASE_URL}/video_feed`}
+                        alt="Push-up Detection Feed"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          display: backendFeedError ? "none" : "block",
+                        }}
+                        onError={() => {
+                          console.error('❌ Backend video feed failed to load');
+                          setBackendFeedError(true);
+                        }}
                       />
-                      <canvas
-                        ref={canvasRef}
-                        className="video-overlay"
-                      />
-                      {cameraError && (
-                        <div className="error-overlay">
-                          <div className="error-content">
-                            <AlertCircle className="error-icon" />
-                            <p>{cameraError}</p>
+                      {backendFeedError && (
+                        <div className="video-fallback" style={{ display: 'flex' }}>
+                          <div className="fallback-content">
+                            <AlertCircle style={{ width: '4rem', height: '4rem', color: '#ef4444', marginBottom: '1rem' }} />
+                            <p className="fallback-text">Backend Not Connected</p>
+                            <p className="fallback-subtext" style={{ marginTop: '0.5rem' }}>
+                              Make sure Flask server is running on port 5001
+                            </p>
+                            <p className="fallback-subtext" style={{ fontSize: '0.875rem', marginTop: '1rem', color: '#9ca3af' }}>
+                              Run: python server.py
+                            </p>
                           </div>
                         </div>
                       )}
-                      <div className="video-controls-overlay">
-                        <button
-                          onClick={handleStop}
-                          className="control-btn stop-btn-overlay"
-                        >
-                          <Square className="btn-icon" />
-                          Stop
-                        </button>
-                        <div className="feedback-overlay">
-                          <div className="live-stats-overlay">
-                            <div className="stat-pill-overlay">
-                              <span className="stat-value">{repCount}</span>
-                              <span className="stat-name">Reps</span>
-                            </div>
-                            <div className="stat-pill-overlay">
-                              <span className="stat-value">{formScore}%</span>
-                              <span className="stat-name">Form</span>
-                            </div>
-                          </div>
-                          <div className="feedback-message-overlay">
-                            {formScore >= 90 ? (
-                              <CheckCircle className="feedback-icon good" />
-                            ) : (
-                              <AlertCircle className="feedback-icon warning" />
-                            )}
-                            <span className="feedback-text">{feedback}</span>
-                          </div>
-                        </div>
-                      </div>
                     </>
+                  ) : (
+                    <div className="camera-placeholder">
+                      <div className="placeholder-content">
+                        <div className="big-banana">🍌</div>
+                        <p className="placeholder-title">AI Tracking Coming Soon!</p>
+                        <p className="placeholder-subtitle">Currently only available for Push-ups</p>
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
+
             </div>
           </div>
         )}
