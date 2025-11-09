@@ -17,8 +17,6 @@ pose = None
 counter = 0
 stage = None
 feedback = ""
-is_in_position = False
-position_confidence = 0
 
 def calculate_angle(a, b, c):
     """Calculate angle between three points"""
@@ -29,66 +27,20 @@ def calculate_angle(a, b, c):
         angle = 360 - angle
     return angle
 
-def check_pushup_position(landmarks, frame_shape):
-    """Check if user is in proper push-up starting position"""
-    global is_in_position, position_confidence
-    
-    try:
-        # Get key landmarks
-        left_shoulder = landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value]
-        right_shoulder = landmarks[mp_pose.PoseLandmark.RIGHT_SHOULDER.value]
-        left_hip = landmarks[mp_pose.PoseLandmark.LEFT_HIP.value]
-        right_hip = landmarks[mp_pose.PoseLandmark.RIGHT_HIP.value]
-        left_ankle = landmarks[mp_pose.PoseLandmark.LEFT_ANKLE.value]
-        right_ankle = landmarks[mp_pose.PoseLandmark.RIGHT_ANKLE.value]
-        
-        # Calculate average y-positions
-        shoulder_y = (left_shoulder.y + right_shoulder.y) / 2
-        hip_y = (left_hip.y + right_hip.y) / 2
-        ankle_y = (left_ankle.y + right_ankle.y) / 2
-        
-        # Check visibility (all key points should be visible)
-        visibility_check = (
-            left_shoulder.visibility > 0.5 and
-            right_shoulder.visibility > 0.5 and
-            left_hip.visibility > 0.5 and
-            right_hip.visibility > 0.5 and
-            left_ankle.visibility > 0.5 and
-            right_ankle.visibility > 0.5
-        )
-        
-        # Check if body is horizontal (push-up position)
-        # In push-up, all body parts should be roughly at same height
-        vertical_alignment = abs(shoulder_y - ankle_y) < 0.3
-        
-        # Check if shoulders are above hips (proper plank position)
-        proper_plank = shoulder_y < hip_y + 0.1
-        
-        # Determine position confidence
-        if visibility_check and vertical_alignment and proper_plank:
-            position_confidence = min(position_confidence + 1, 10)
-        else:
-            position_confidence = max(position_confidence - 1, 0)
-        
-        # Only consider in position if confidence is high
-        is_in_position = position_confidence >= 5
-        
-        return is_in_position, visibility_check, vertical_alignment, proper_plank
-        
-    except Exception as e:
-        is_in_position = False
-        position_confidence = 0
-        return False, False, False, False
-
 def generate_frames():
-    global cap, pose, counter, stage, feedback, is_in_position, position_confidence
+    global cap, pose, counter, stage, feedback
     
     # Initialize camera and pose
     if cap is None:
         cap = cv2.VideoCapture(0)
+        cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+        cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     
     if pose is None:
-        pose = mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5)
+        pose = mp_pose.Pose(
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5
+        )
     
     while True:
         ret, frame = cap.read()
@@ -109,9 +61,6 @@ def generate_frames():
         try:
             landmarks = results.pose_landmarks.landmark
             
-            # Check if user is in proper push-up position
-            in_pos, visible, aligned, plank = check_pushup_position(landmarks, frame.shape)
-
             # Use LEFT side (facing camera sideways)
             shoulder = [landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].x,
                         landmarks[mp_pose.PoseLandmark.LEFT_SHOULDER.value].y]
@@ -130,104 +79,51 @@ def generate_frames():
             elbow_angle = calculate_angle(shoulder, elbow, wrist)
             body_angle = calculate_angle(shoulder, hip, ankle)
 
-            # Only count reps if user is in proper position
-            if is_in_position:
-                # Rep counting: elbow bends below ~90° and returns above ~160°
-                if elbow_angle > 160:
-                    stage = "up"
-                if elbow_angle < 90 and stage == "up":
-                    stage = "down"
-                    counter += 1
+            # Rep counting: elbow bends below ~90° and returns above ~160°
+            if elbow_angle > 160:
+                stage = "up"
+            if elbow_angle < 90 and stage == "up":
+                stage = "down"
+                counter += 1
+                print(f"✅ REP COUNTED! Total: {counter}")
 
-                # Posture feedback
-                if body_angle < 160:
-                    feedback = "LOWER HIPS"
-                    color = (0, 0, 255)
-                elif body_angle > 175:
-                    feedback = "LOWER CHEST"
-                    color = (0, 165, 255)
-                else:
-                    feedback = "GOOD FORM"
-                    color = (0, 255, 0)
+            # Posture feedback
+            if body_angle < 160:
+                feedback = "LOWER HIPS"
+                color = (0, 0, 255)  # Red
+            elif body_angle > 175:
+                feedback = "LOWER CHEST"
+                color = (0, 165, 255)  # Orange
             else:
-                # Setup mode feedback
-                if not visible:
-                    feedback = "MOVE BACK - SHOW FULL BODY"
-                    color = (255, 140, 0)
-                elif not aligned:
-                    feedback = "GET IN PUSH-UP POSITION"
-                    color = (255, 140, 0)
-                elif not plank:
-                    feedback = "POSITION SIDEWAYS"
-                    color = (255, 140, 0)
-                else:
-                    feedback = "HOLD POSITION..."
-                    color = (255, 255, 0)
-                stage = "setup"
+                feedback = "GOOD FORM"
+                color = (0, 255, 0)  # Green
 
-            # Draw position indicator
-            position_text = "✓ READY" if is_in_position else "⚠ SETUP MODE"
-            position_color = (0, 255, 0) if is_in_position else (255, 140, 0)
-            cv2.rectangle(image, (10, 10), (280, 60), (0, 0, 0), -1)
-            cv2.rectangle(image, (10, 10), (280, 60), position_color, 3)
-            cv2.putText(image, position_text, (20, 45),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, position_color, 3)
-
-            # Draw rep counter (ALWAYS VISIBLE)
-            # Draw banana emoji background
-            cv2.rectangle(image, (frame.shape[1] - 220, 10), (frame.shape[1] - 10, 120), (0, 0, 0), -1)
-            cv2.rectangle(image, (frame.shape[1] - 220, 10), (frame.shape[1] - 10, 120), (255, 215, 0), 4)
-            
-            # Draw banana emoji at top
-            cv2.putText(image, '🍌', (frame.shape[1] - 180, 45),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.2, (255, 215, 0), 2)
-            
-            # Draw rep count
-            cv2.putText(image, f'{counter}', (frame.shape[1] - 170, 95),
-                        cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 215, 0), 4)
-            
-            # Draw "REPS" label
-            cv2.putText(image, 'REPS', (frame.shape[1] - 190, 115),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
-
-            # Draw stage indicator
-            if is_in_position and stage:
-                cv2.putText(image, f'Stage: {stage.upper()}', (20, 140),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255,255,0), 2)
-
-            # Draw feedback (larger and centered)
-            text_size = cv2.getTextSize(feedback, cv2.FONT_HERSHEY_SIMPLEX, 1.2, 3)[0]
-            text_x = (frame.shape[1] - text_size[0]) // 2
-            # Background box for feedback
-            cv2.rectangle(image, 
-                         (text_x - 20, 50), 
-                         (text_x + text_size[0] + 20, 100), 
-                         (0, 0, 0), -1)
-            cv2.putText(image, feedback, (text_x, 85),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.2, color, 3)
-
-            # Draw angle indicators (only if in position)
-            if is_in_position:
-                cv2.putText(image, f'Elbow: {int(elbow_angle)}', 
-                            tuple(np.multiply(elbow, [frame.shape[1], frame.shape[0]]).astype(int)),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,255,0), 2)
-                cv2.putText(image, f'Body: {int(body_angle)}', 
-                            tuple(np.multiply(hip, [frame.shape[1], frame.shape[0]]).astype(int)),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0,255,0), 2)
+            # Draw data on frame
+            cv2.putText(image, f'Reps: {counter}', (20, 60),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 3)
+            cv2.putText(image, f'Stage: {stage}', (20, 100),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 0), 2)
+            cv2.putText(image, f'{feedback}', (frame.shape[1]//2 - 150, 80),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, color, 3)
+            cv2.putText(image, f'Elbow: {int(elbow_angle)}°', 
+                        tuple(np.multiply(elbow, [frame.shape[1], frame.shape[0]]).astype(int)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+            cv2.putText(image, f'Body: {int(body_angle)}°', 
+                        tuple(np.multiply(hip, [frame.shape[1], frame.shape[0]]).astype(int)),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
 
             # Draw skeleton
             mp_drawing.draw_landmarks(
                 image, results.pose_landmarks, mp_pose.POSE_CONNECTIONS,
-                mp_drawing.DrawingSpec(color=(0,0,255), thickness=2, circle_radius=3),
-                mp_drawing.DrawingSpec(color=(255,255,255), thickness=2, circle_radius=2)
+                mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=2, circle_radius=3),
+                mp_drawing.DrawingSpec(color=(255, 255, 255), thickness=2, circle_radius=2)
             )
 
         except Exception as e:
-            print(f"Error processing frame: {e}")
-            # Reset position when no detection
-            is_in_position = False
-            position_confidence = 0
-            pass
+            # If no landmarks detected, show message
+            feedback = "POSITION YOURSELF SIDEWAYS"
+            cv2.putText(image, feedback, (frame.shape[1]//2 - 200, frame.shape[0]//2),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 140, 0), 3)
 
         # Encode frame to JPEG
         ret, buffer = cv2.imencode('.jpg', image)
@@ -250,34 +146,36 @@ def video_feed():
 @app.route('/start_session', methods=['POST'])
 def start_session():
     """Start a new workout session"""
-    global counter, stage, position_confidence
+    global counter, stage, feedback
     counter = 0
     stage = None
-    position_confidence = 0
+    feedback = "POSITION SIDEWAYS!"
+    print("🍌 Session started! Position yourself sideways to the camera.")
     return jsonify({'status': 'started', 'message': 'Session started'}), 200
 
 @app.route('/end_session', methods=['POST'])
 def end_session():
     """End workout session"""
     global counter
+    print(f"🏁 Session ended! Total reps: {counter}")
     return jsonify({
         'status': 'ended',
         'total_reps': counter,
-        'streak': 1  # You can implement streak logic here
+        'streak': 1
     }), 200
 
 @app.route('/get_stats', methods=['GET'])
 def get_stats():
     """Get current workout stats"""
-    global counter, is_in_position, feedback
+    global counter, feedback
     return jsonify({
         'reps': counter,
-        'in_position': is_in_position,
         'feedback': feedback
     }), 200
 
 if __name__ == '__main__':
     print("🍌 NanaFit Backend Starting...")
     print("📹 Camera will initialize when /video_feed is accessed")
-    print("🌐 Server running on http://localhost:5001")
+    print("👉 POSITION YOURSELF SIDEWAYS to the camera!")
+    print("🍌 Server running on http://localhost:5001")
     app.run(host='0.0.0.0', port=5001, debug=True, threaded=True)
