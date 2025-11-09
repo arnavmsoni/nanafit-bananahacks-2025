@@ -1,102 +1,1369 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-    margin: 0;
-    background: #fffbea;
-    font-family: 'Baloo 2', cursive;
-    overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.app-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fde047 0%, #fef08a 50%, #fef9c3 100%);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Floating bananas animation */
+.app-container::before,
+.app-container::after {
+  content: '🍌';
+  position: fixed;
+  font-size: 3rem;
+  opacity: 0.15;
+  animation: float 20s infinite ease-in-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.app-container::before {
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+}
+
+.app-container::after {
+  top: 70%;
+  right: 10%;
+  animation-delay: 5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
   }
-  
-  .app-title {
-    font-size: 3rem;
-    color: #f5b301;
-    text-shadow: 2px 2px #ffd966;
+  25% {
+    transform: translateY(-30px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(0) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-20px) rotate(3deg);
+  }
+}
+
+/* Header Styles */
+.app-header {
+  background: linear-gradient(135deg, #facc15 0%, #fbbf24 100%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-bottom: 4px solid #eab308;
+  position: relative;
+}
+
+.app-header::before {
+  content: '🍌';
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(-15deg);
+  font-size: 4rem;
+  opacity: 0.2;
+  animation: wiggle 3s infinite ease-in-out;
+}
+
+@keyframes wiggle {
+  0%, 100% {
+    transform: translateY(-50%) rotate(-15deg);
+  }
+  50% {
+    transform: translateY(-50%) rotate(15deg);
+  }
+}
+
+.header-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.back-button {
+  background: rgba(255, 255, 255, 0.3);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: translateX(-2px);
+}
+
+.back-icon {
+  width: 20px;
+  height: 20px;
+  color: #78350f;
+}
+
+.banana-icon {
+  font-size: 3rem;
+}
+
+.logo-section h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #78350f;
+  margin: 0;
+}
+
+.tagline {
+  font-size: 0.875rem;
+  color: #92400e;
+  margin: 0;
+}
+
+.stats-row {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 140px;
+  position: relative;
+}
+
+.stat-card::before {
+  content: '🍌';
+  position: absolute;
+  top: -0.5rem;
+  right: -0.5rem;
+  font-size: 1.5rem;
+  opacity: 0;
+  transform: scale(0) rotate(0deg);
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover::before {
+  opacity: 0.3;
+  transform: scale(1) rotate(15deg);
+}
+
+.stat-icon-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.stat-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.stat-icon.trophy {
+  color: #eab308;
+}
+
+.stat-icon.streak {
+  color: #f97316;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.connection-status.connected {
+  color: #059669;
+}
+
+.connection-status.connected .status-dot {
+  background: #10b981;
+}
+
+.connection-status.connected::after {
+  content: '🍌';
+  margin-left: 0.25rem;
+  font-size: 0.875rem;
+  animation: banana-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes banana-pulse {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+.connection-status.disconnected {
+  color: #dc2626;
+}
+
+.connection-status.disconnected .status-dot {
+  background: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Main Content */
+.main-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* HOME PAGE STYLES */
+.home-page {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  position: relative;
+}
+
+.home-page::before,
+.home-page::after {
+  content: '🍌';
+  position: absolute;
+  font-size: 2rem;
+  opacity: 0.1;
+  animation: banana-fall 15s infinite linear;
+}
+
+.home-page::before {
+  top: -50px;
+  left: 20%;
+  animation-delay: 2s;
+}
+
+.home-page::after {
+  top: -50px;
+  right: 30%;
+  animation-delay: 7s;
+}
+
+@keyframes banana-fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.1;
+  }
+  90% {
+    opacity: 0.1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.welcome-section {
+  text-align: center;
+  padding: 2rem 0;
+}
+
+.welcome-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #78350f;
+  margin-bottom: 0.5rem;
+}
+
+.welcome-subtitle {
+  font-size: 1.25rem;
+  color: #92400e;
+}
+
+.muscle-groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.muscle-group-card {
+  background: white;
+  border: 4px solid #facc15;
+  border-radius: 1.5rem;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.muscle-group-card::after {
+  content: '🍌';
+  position: absolute;
+  bottom: -1rem;
+  right: -1rem;
+  font-size: 4rem;
+  opacity: 0.1;
+  transform: rotate(25deg);
+  transition: all 0.3s ease;
+}
+
+.muscle-group-card:hover::after {
+  opacity: 0.3;
+  transform: rotate(35deg) scale(1.2);
+}
+
+.muscle-group-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--card-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.muscle-group-card:hover::before {
+  transform: scaleX(1);
+}
+
+.muscle-group-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--card-color);
+}
+
+.muscle-group-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.muscle-group-image-wrapper {
+  width: 180px;
+  height: 200px;
+  margin: 0 auto 1rem;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banana-muscle-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+  transition: transform 0.3s ease;
+}
+
+.muscle-group-card:hover .banana-muscle-img {
+  transform: scale(1.05) translateY(-5px);
+}
+
+.banana-fallback {
+  font-size: 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.muscle-group-name {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.muscle-group-exercises {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.muscle-group-hover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  color: var(--card-color);
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.muscle-group-card:hover .muscle-group-hover {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hover-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.tips-section {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  border: 4px solid #facc15;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tips-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #78350f;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.tips-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.tip-item {
+  display: flex;
+  align-items: start;
+  gap: 1rem;
+  padding: 1rem;
+  background: #fef9c3;
+  border-radius: 0.75rem;
+}
+
+.tip-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.tip-item p {
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* EXERCISE SELECTION PAGE STYLES */
+.exercises-page {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.exercise-selection-header {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.muscle-group-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  background: white;
+  padding: 1rem 2rem;
+  border-radius: 1rem;
+  border: 4px solid var(--badge-color);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.badge-icon {
+  font-size: 2.5rem;
+}
+
+.badge-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #78350f;
+  margin: 0;
+}
+
+.exercise-selection-subtitle {
+  font-size: 1.125rem;
+  color: #92400e;
+  margin-top: 1rem;
+}
+
+.exercises-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.exercise-card {
+  background: white;
+  border: 4px solid #facc15;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.exercise-card::after {
+  content: '🍌';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-size: 2rem;
+  opacity: 0;
+  transform: rotate(-20deg) scale(0.5);
+  transition: all 0.3s ease;
+}
+
+.exercise-card:hover::after {
+  opacity: 0.2;
+  transform: rotate(0deg) scale(1);
+}
+
+.exercise-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: var(--exercise-color);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.exercise-card:hover::before {
+  transform: scaleX(1);
+}
+
+.exercise-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  border-color: var(--exercise-color);
+}
+
+.exercise-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.exercise-number {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #9ca3af;
+}
+
+.difficulty-badge {
+  padding: 0.375rem 0.875rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.difficulty-badge[data-difficulty="Beginner"] {
+  background: #dcfce7;
+  color: #166534;
+  border: 2px solid #22c55e;
+}
+
+.difficulty-badge[data-difficulty="Intermediate"] {
+  background: #fef3c7;
+  color: #92400e;
+  border: 2px solid #f59e0b;
+}
+
+.difficulty-badge[data-difficulty="Advanced"] {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 2px solid #ef4444;
+}
+
+.exercise-card-icon {
+  width: 2rem;
+  height: 2rem;
+  color: var(--exercise-color);
+}
+
+.exercise-card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.exercise-card-tips {
+  font-size: 0.95rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.exercise-instructions {
+  background: #fef9c3;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 2px solid #fde047;
+}
+
+.instructions-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #78350f;
+  margin: 0 0 0.75rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.instructions-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.instructions-list li {
+  font-size: 0.875rem;
+  color: #374151;
+  line-height: 1.4;
+  padding-left: 0.25rem;
+}
+
+.instructions-list li::marker {
+  color: #eab308;
+  font-weight: 700;
+}
+
+.more-steps {
+  font-style: italic;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.exercise-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 2px solid #f3f4f6;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+.exercise-card:hover .exercise-card-footer {
+  opacity: 1;
+}
+
+.start-text {
+  font-weight: 600;
+  color: var(--exercise-color);
+}
+
+.arrow-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--exercise-color);
+  transition: transform 0.3s ease;
+}
+
+.exercise-card:hover .arrow-icon {
+  transform: translateX(4px) rotate(180deg) !important;
+}
+
+.exercise-info-section {
+  background: white;
+  border-radius: 1.5rem;
+  padding: 2rem;
+  border: 4px solid #facc15;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.info-card {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.info-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #78350f;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.info-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: #fef9c3;
+  border-radius: 0.5rem;
+  color: #374151;
+  font-size: 0.95rem;
+}
+
+.info-list li::before {
+  content: '✓';
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: #22c55e;
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+}
+
+/* WORKOUT PAGE STYLES - Full Screen Split */
+.workout-page {
+  width: 100%;
+  height: calc(100vh - 140px);
+  padding: 0;
+  margin: 0;
+}
+
+.split-screen-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  height: 100%;
+  padding: 0;
+}
+
+.banana-bot-side,
+.user-camera-side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+.banana-bot-side .side-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 1rem;
+  border: 3px solid #facc15;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-camera-side {
+  gap: 0;
+}
+
+.side-label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.label-icon {
+  font-size: 1.75rem;
+}
+
+.label-text {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #78350f;
+}
+
+.exercise-name {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #92400e;
+  padding: 0.5rem 1rem;
+  background: #fef9c3;
+  border-radius: 0.5rem;
+}
+
+.bot-video-wrapper,
+.user-video-wrapper {
+  flex: 1;
+  background: #1f2937;
+  border-radius: 1.5rem;
+  border: 4px solid #facc15;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.banana-bot-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #1f2937;
+}
+
+.bot-overlay-badge {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: linear-gradient(135deg, #facc15 0%, #fbbf24 100%);
+  color: #78350f;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 3px solid white;
+}
+
+.video-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fallback-content {
+  text-align: center;
+}
+
+.fallback-text {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 1rem 0 0.5rem 0;
+}
+
+.fallback-subtext {
+  color: #9ca3af;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.camera-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholder-content {
+  text-align: center;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.start-btn-large {
+  margin-top: 2rem;
+  padding: 1.25rem 2.5rem;
+  font-size: 1.25rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.start-btn-large:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+.start-btn-large:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.start-btn-large .btn-icon {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.user-video-feed {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-controls-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stop-btn-overlay {
+  padding: 0.75rem 1.5rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  align-self: flex-start;
+}
+
+.stop-btn-overlay:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+}
+
+.stop-btn-overlay .btn-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.feedback-overlay {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.live-stats-overlay {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.stat-pill-overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 0.75rem;
+  border: 2px solid #facc15;
+  backdrop-filter: blur(10px);
+}
+
+.stat-pill-overlay .stat-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #78350f;
+  line-height: 1;
+}
+
+.stat-pill-overlay .stat-name {
+  font-size: 0.75rem;
+  color: #92400e;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+.feedback-message-overlay {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 0.75rem;
+  backdrop-filter: blur(10px);
+  border: 2px solid #facc15;
+  justify-content: center;
+}
+
+.feedback-message-overlay .feedback-icon {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+}
+
+.feedback-message-overlay .feedback-icon.good {
+  color: #10b981;
+}
+
+.feedback-message-overlay .feedback-icon.warning {
+  color: #f97316;
+}
+
+.feedback-message-overlay .feedback-text {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #78350f;
+  margin: 0;
+}
+
+/* Responsive for split screen */
+@media (max-width: 1024px) {
+  .split-screen-container {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .workout-page {
+    height: auto;
+    min-height: calc(100vh - 140px);
+  }
+
+  .side-header {
+    flex-direction: column;
+    gap: 0.75rem;
     text-align: center;
   }
-  
-  .tagline {
-    text-align: center;
-    color: #5a4b00;
-    font-size: 1.2rem;
+
+  .live-stats {
+    justify-content: center;
   }
-  
-  .video-grid {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 1.5rem;
+}
+
+/* Control Buttons (shared styles) */
+
+.control-btn {
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  border: none;
+  font-weight: 700;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.control-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.start-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.start-btn::before {
+  content: '🍌';
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.start-btn:hover:not(:disabled)::before {
+  left: 10px;
+  opacity: 1;
+}
+
+.start-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  padding-left: 3rem;
+}
+
+.stop-btn {
+  background: #ef4444;
+  color: white;
+}
+
+.stop-btn:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.refresh-btn {
+  background: #3b82f6;
+  color: white;
+}
+
+.refresh-btn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.btn-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Tips Card */
+.tips-card {
+  background: linear-gradient(135deg, #fef9c3 0%, #fed7aa 100%);
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  border: 4px solid #facc15;
+  position: relative;
+}
+
+.tips-card::before {
+  content: '🍌';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2rem;
+  opacity: 0.2;
+  transform: rotate(25deg);
+}
+
+.tips-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tips-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+}
+
+.tip-bullet {
+  color: #eab308;
+  margin-top: 0.125rem;
+  font-weight: 700;
+}
+
+/* Shared placeholder styles */
+.placeholder-content {
+  text-align: center;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.big-banana {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  animation: banana-spin 4s ease-in-out infinite;
+}
+
+@keyframes banana-spin {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-10deg);
+  }
+  75% {
+    transform: rotate(10deg);
+  }
+}
+
+.placeholder-title {
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.placeholder-subtitle {
+  color: #9ca3af;
+  font-size: 1rem;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.error-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.error-content {
+  background: #ef4444;
+  color: white;
+  padding: 1.5rem 2rem;
+  border-radius: 0.75rem;
+  max-width: 400px;
+  text-align: center;
+}
+
+.error-icon {
+  width: 3rem;
+  height: 3rem;
+  margin: 0 auto 0.5rem;
+}
+
+/* Fun banana cursor */
+.muscle-group-card,
+.exercise-card,
+.control-btn {
+  cursor: pointer;
+}
+
+.muscle-group-card:hover,
+.exercise-card:hover,
+.control-btn:hover:not(:disabled) {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><text y="24" font-size="24">🍌</text></svg>'), auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stats-row {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .stat-card {
+    flex: 1;
+    min-width: auto;
+  }
+
+  .main-content {
     padding: 1rem;
   }
-  
-  .trainer-screen, .user-camera {
-    background: #fff4b0;
-    border-radius: 1.5rem;
-    box-shadow: 0 4px 20px rgba(245, 179, 1, 0.3);
-    width: 45%;
-    height: 350px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+
+  .muscle-groups-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
-  
-  .banana-trainer {
-    width: 200px;
-    height: auto;
-    border-radius: 1rem;
+
+  .exercises-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
-  
-  .control-panel {
-    text-align: center;
-    padding: 1.5rem;
-    background: #fff6cc;
-    border-top: 3px solid #ffd54f;
-    border-radius: 2rem 2rem 0 0;
-    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+
+  .tips-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .exercise-btn {
-    background: #fff0a5;
-    border: none;
-    padding: 10px 20px;
-    margin: 0.3rem;
-    border-radius: 1rem;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.2s;
+
+  .workout-grid {
+    gap: 1rem;
   }
-  
-  .exercise-btn.selected {
-    background: #ffeb3b;
-    transform: scale(1.1);
+
+  .welcome-title {
+    font-size: 2rem;
   }
-  
-  .start-btn, .stop-btn, .refresh-btn {
-    background: #f5b301;
-    border: none;
-    color: white;
-    border-radius: 1rem;
-    padding: 12px 25px;
-    margin: 0.5rem;
+
+  .welcome-subtitle {
     font-size: 1rem;
-    cursor: pointer;
   }
-  
-  .stop-btn {
-    background: #f44336;
-  }
-  
-  .feedback-msg {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.3rem;
-    margin-top: 1rem;
-  }
-  
-  .floating-banana {
-    position: absolute;
-    left: calc(10% + 80% * var(--x));
-    font-size: 1.5rem;
-    opacity: 0.7;
-  }
-  
+}
