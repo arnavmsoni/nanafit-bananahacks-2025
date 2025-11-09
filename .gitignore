@@ -1,4 +1,116 @@
-echo "venv/
+# -------------------------------
+# Python + OpenCV + MediaPipe
+# -------------------------------
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv/
+.ipynb_checkpoints/
+
+# Python bytecode
 __pycache__/
 *.pyc
-" >> .gitignore
+*.pyo
+*.pyd
+*.so
+
+# Build and distribution files
+build/
+dist/
+*.egg-info/
+
+# IDE and OS files
+.DS_Store
+*.swp
+*.swo
+*.bak
+*.tmp
+*.log
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Cache and temporary files
+.cache/
+*.tmp
+*.log
+*.pickle
+*.pkl
+
+# VS Code / JetBrains settings
+.vscode/
+.idea/
+
+# Node.js frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# React build output (if you add a frontend)
+build/
+dist/
+
+# Environment and config files
+.env
+*.env
+.env.*
+*.local
+
+# Git-related temporary files
+.gitignore~
+*.orig
+*.rej
+
+# Media / large files (for safety)
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.tif
+*.tiff
+*.webp
+*.zip
+*.tar
+*.gz
+
+# TensorFlow / model data
+*.h5
+*.ckpt
+*.pb
+*.tflite
+*.onnx
+__model_cache__/
+checkpoints/
+
+# Custom project folders
+# (ignore large or generated data)
+data/
+output/
+results/
+runs/
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Thumbnails
+._*
+
+# Python virtual environment activation scripts
+bin/
+Lib/
+Include/
+Scripts/
+pyvenv.cfg
+
+# Backup files
+*~
+*.bak
